@@ -1,16 +1,34 @@
-import React from "react";
-import {Grid, Stack } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Grid, Stack, Typography } from "@mui/material";
 import { useGetBooksQuery } from "../api/libraryApi";
-import SingleBook from "./SingleBook";
+import BookCard from "./BookCard";
 import Loading from "./Loading";
 import Error from "./Error";
+import bookLogo from "../assets/books.png";
+import SearchBar from "./SearchBar";
+import RegistrationForm from "./Register";
 
 const RenderBooks = ({ books }) => {
+  const [searchString, setSearchString] = useState("");
+  const [filteredBooks, setFilteredBooks] = useState(books);
+
+  useEffect(() => {
+    const latestFilter = books.filter((book) =>
+      book.title.toLowerCase().includes(searchString.toLowerCase())
+    );
+    setFilteredBooks(latestFilter);
+  }, [searchString]);
+
   return (
     <Stack sx={{ mt: 2, alignItems: "center" }}>
+      <Typography textAlign="center" variant="h3" color="primary">
+        <img id="logo-image" src={bookLogo} />
+        The Library
+      </Typography>
+      <SearchBar setSearchString={setSearchString} />
       <Grid container>
-        {books.map((book) => (
-          <SingleBook book={book} key={book.id}/>
+        {filteredBooks.map((book) => (
+          <BookCard book={book} key={book.id} />
         ))}
       </Grid>
     </Stack>
