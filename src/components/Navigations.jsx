@@ -34,6 +34,16 @@ function Navigation({ isLoggedIn, onLogout }) {
                 <Button color="inherit">Register</Button>
               </Link>
             )}
+             {location.pathname !== '/checkout' && (
+              <Link to="/checkout" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Button color="inherit">Checkout</Button>
+              </Link>
+            )}
+            {location.pathname !== '/account' && (
+              <Link to="/account" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Button color="inherit">Account</Button>
+              </Link>
+            )}
           </>
         )}
       </Toolbar>

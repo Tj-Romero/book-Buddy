@@ -8,24 +8,85 @@ export const libraryApi = createApi({
 	reducerPath: "libraryApi",
 	// Define a base query function that all endpoints will use as the base of their request
 	baseQuery: fetchBaseQuery({
-		// The base URL for all requests
 		baseUrl: "https://fsa-book-buddy-b6e748d1380d.herokuapp.com",
-	}),
+		prepareHeaders: (headers, { getState }) => {
+			const token = localStorage.getItem('token');
+			if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
+                headers.set('Content-Type','application/json');
+            }
+			return headers;
+		},
+	}),	
 	// Define endpoints for our API service
 	endpoints: (builder) => ({
-		// Define an endpoint that fetches players
-		// The part of the URL that comes after the baseUrl for this specific endpoint
+		// Define an endpoint that fetches books
 		getBooks: builder.query({
 			query: () => "/api/books",
 		}),
 		getBook: builder.query({
 			query: (id) => `/api/books/${id}`,
 		}),
-	}),
+		getAccount: builder.query({
+            query: (token) => ({
+                url: '/api/users/me',
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            })
+		}),
+        getReservations: builder.query({
+            query: () => ({
+                url: '/api/reservations',
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+        }),
+		// Auth endpoints
+        register: builder.mutation({
+            query: (user) => ({
+                url: '/api/users/register',
+                method: "POST",
+                body: user,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+        }), 
+        login: builder.mutation({
+            query: (user) => ({
+                url: '/api/users/login',
+                method: "POST",
+                body: user,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+        }),
+		checkout: builder.mutation({
+            query: (user) => ({
+                url: '/api/users/checkout',
+                method: "POST",
+                body: user,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+        }),
+	})
 });
 
-// Export hooks for each endpoint - in this case, a React hook that triggers the fetchPlayers query
+// Export hooks for each endpoint - in this case, React hooks for queries and mutations
 export const {
     useGetBooksQuery,
-    useGetBookQuery
+    useGetBookQuery,
+    useRegisterMutation,
+    useLoginMutation,
+	useCheckoutMutation,
+	useGetAccountQuery,
+    useGetReservationsQuery
 } = libraryApi;

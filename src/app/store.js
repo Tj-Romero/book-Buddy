@@ -4,6 +4,7 @@ import { configureStore } from "@reduxjs/toolkit";
 // Import the API service we defined (which includes the API endpoints and the reducer)
 import { libraryApi } from "../api/libraryApi";
 import bookSlice from "../features/books/bookSlice";
+import authSlice from "../features/authSlice";
 
 // Create a Redux store
 export const store = configureStore({
@@ -14,6 +15,7 @@ export const store = configureStore({
     // The key is the reducerPath we defined in our API service, and the value is the reducer
     [libraryApi.reducerPath]: libraryApi.reducer,
     books: bookSlice,
+    auth: authSlice,
   },
   // Add any additional middleware
   // getDefaultMiddleware is a function that returns the default middleware used by Redux Toolkit

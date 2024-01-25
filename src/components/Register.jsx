@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Typography, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom'
+import { useRegisterMutation } from '../api/libraryApi';
+
 
 function RegistrationForm() {
     const navigate = useNavigate();
+    const [register, result ] = useRegisterMutation();
     const [formData, setFormData] = useState({
+        
         name: '',
         email: '',
         password: ''
     });
+
 
     const handleChange = (event) => {
         setFormData({
@@ -17,15 +22,13 @@ function RegistrationForm() {
         });
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(formData);
-        alert('Registration Successful!');
-        navigate('/');
+        await register(formData);
     };
 
-    const handleClose = () => {
-        navigate('/'); 
+    const handleGoHome = () => {
+        navigate('/'); // Replace '/' with your home route
     };
 
     return (
@@ -78,7 +81,7 @@ function RegistrationForm() {
                     </Button>
 
                     <Button
-                    onClick={handleClose}
+                    onClick={handleGoHome}
                     color="secondary"
                     variant="contained"
                     fullWidth

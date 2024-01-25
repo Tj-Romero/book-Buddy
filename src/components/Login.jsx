@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
+import { useLoginMutation } from '../api/libraryApi';
 
 const LoginForm = () => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [login, result ] = useLoginMutation();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('Login Submitted', { username, password });
+        const { data: { token }} = await login({password, email});
+        if (token) localStorage.setItem("token", token);
+        const myToken = localStorage.getItem("token")
+        console.log(myToken);
     };
 
     return (
         <Container maxWidth="xs">
             <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Typography component="h1" variant="h5">
-                    Sign in
+                    Login
                 </Typography>
                 <form onSubmit={handleSubmit} style={{ marginTop: 1 }}>
                     <TextField
@@ -22,13 +27,13 @@ const LoginForm = () => {
                         margin="normal"
                         required
                         fullWidth
-                        id="username"
-                        label="Username"
-                        name="username"
-                        autoComplete="username"
+                        id="email"
+                        label="email"
+                        name="email"
+                        autoComplete="email"
                         autoFocus
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                     <TextField
                         variant="outlined"
@@ -50,7 +55,7 @@ const LoginForm = () => {
                         color="secondary"
                         style={{ marginTop: 12, marginBottom: 2 }}
                     >
-                        Sign In
+                        LogIn
                     </Button>
                 </form>
             </Box>
